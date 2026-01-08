@@ -11,6 +11,17 @@
 |
 */
 
+// Suppress PHP 8.4 deprecation warnings from vendor packages (temporary until vendors update)
+// This filters out deprecation warnings from vendor/ directory only
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    // Suppress deprecation warnings from vendor packages
+    if ($errno === E_DEPRECATED && strpos($errfile, 'vendor') !== false) {
+        return true; // Suppress this error
+    }
+    // Let other errors through normally
+    return false;
+}, E_DEPRECATED);
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );

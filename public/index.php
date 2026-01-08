@@ -31,6 +31,14 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
+// Suppress PHP 8.4 deprecation warnings from vendor packages (temporary until vendors update)
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    if ($errno === E_DEPRECATED && strpos($errfile, 'vendor') !== false) {
+        return true; // Suppress this warning
+    }
+    return false;
+}, E_DEPRECATED);
+
 require __DIR__.'/../vendor/autoload.php';
 
 /*

@@ -29,15 +29,26 @@ class EventManagerController extends Controller
             ->upcoming()
             ->whereIn('status', [Event::STATUS_OPEN, Event::STATUS_UPCOMING])
             ->count();
-        $pastEvents = $user->managedEvents()->past()->count();
+        // Ongoing events: events that are open and happening today
+        $ongoingEvents = $user->managedEvents()
+            ->where('status', Event::STATUS_OPEN)
+            ->whereDate('date', today())
+            ->count();
+        // Completed events: past events or closed events
+        $completedEvents = $user->managedEvents()
+            ->where(function ($query) {
+                $query->past()
+                      ->orWhere('status', Event::STATUS_CLOSED);
+            })
+            ->count();
 
-        $recentEvents = $user->managedEvents()
+        $allEvents = $user->managedEvents()
             ->with(['categories', 'participants'])
+            ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->limit(5)
             ->get();
 
-        return view('manager.dashboard', compact('totalEvents', 'upcomingEvents', 'pastEvents', 'recentEvents'));
+        return view('manager.dashboard', compact('totalEvents', 'upcomingEvents', 'ongoingEvents', 'completedEvents', 'allEvents'));
     }
 
     /**
@@ -127,7 +138,7 @@ class EventManagerController extends Controller
 
             DB::commit();
 
-            return redirect()->route('manager.events.index')
+            return redirect()->route('events.index')
                 ->with('success', 'Event created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -262,12 +273,12 @@ class EventManagerController extends Controller
 
             DB::commit();
 
-            return redirect()->route('manager.events.index')
+            return redirect()->route('manager.dashboard')
                 ->with('success', 'Event deleted successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->route('manager.events.index')
+            return redirect()->route('manager.dashboard')
                 ->with('error', 'An error occurred while deleting the event. Please try again.');
         }
     }

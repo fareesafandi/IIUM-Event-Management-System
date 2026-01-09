@@ -27,6 +27,7 @@ class User extends Authenticatable
         'matric_no',
         'phone_number',
         'role',
+        'profile_picture',
     ];
 
     /**
@@ -125,5 +126,23 @@ class User extends Authenticatable
     public function hasRegisteredForEvent(int $eventId): bool
     {
         return $this->registeredEvents()->where('events.id', $eventId)->exists();
+    }
+
+    /**
+     * Get the profile picture URL
+     *
+     * @return string
+     */
+    public function getProfilePictureUrlAttribute(): string
+    {
+        if (!$this->profile_picture) {
+            return asset('images/default-avatar.png');
+        }
+
+        if (filter_var($this->profile_picture, FILTER_VALIDATE_URL)) {
+            return $this->profile_picture;
+        }
+
+        return asset('storage/' . $this->profile_picture);
     }
 }

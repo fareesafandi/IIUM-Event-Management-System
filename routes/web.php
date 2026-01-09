@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public Routes - Events (accessible to everyone)
-Route::get('/', [EventController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/search', [EventController::class, 'search'])->name('events.search');
 Route::get('/events/filter', [EventController::class, 'filter'])->name('events.filter');

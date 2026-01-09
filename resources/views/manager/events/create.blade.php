@@ -1,25 +1,31 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Create New Event') }}
-            </h2>
-            <a href="{{ route('manager.events.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">
-                ← Back to Events
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+@section('title', 'Create New Event')
+
+@section('content')
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Modal-style container -->
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">Create New Event</h2>
+                <a href="{{ route('manager.dashboard') }}" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
                 <form action="{{ route('manager.events.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Title -->
-                    <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Event Title *
+                    <div class="mb-6">
+                        <label for="title" class="block text-sm font-semibold text-gray-800 mb-2">
+                            Title *
                         </label>
                         <input 
                             type="text" 
@@ -27,7 +33,7 @@
                             name="title" 
                             value="{{ old('title') }}"
                             required
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             placeholder="Enter event title"
                         >
                         @error('title')
@@ -36,16 +42,16 @@
                     </div>
 
                     <!-- Description -->
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">
                             Description *
                         </label>
                         <textarea 
                             id="description" 
                             name="description" 
-                            rows="5"
+                            rows="4"
                             required
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 min-h-[100px]"
                             placeholder="Enter event description"
                         >{{ old('description') }}</textarea>
                         @error('description')
@@ -54,9 +60,9 @@
                     </div>
 
                     <!-- Date and Time -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label for="date" class="block text-sm font-semibold text-gray-800 mb-2">
                                 Date *
                             </label>
                             <input 
@@ -66,7 +72,7 @@
                                 value="{{ old('date') }}"
                                 min="{{ date('Y-m-d') }}"
                                 required
-                                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             >
                             @error('date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -74,16 +80,16 @@
                         </div>
 
                         <div>
-                            <label for="time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label for="time" class="block text-sm font-semibold text-gray-800 mb-2">
                                 Time *
                             </label>
                             <input 
                                 type="time" 
                                 id="time" 
                                 name="time" 
-                                value="{{ old('time') }}"
+                                value="{{ old('time', '09:00') }}"
                                 required
-                                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             >
                             @error('time')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -92,8 +98,8 @@
                     </div>
 
                     <!-- Venue -->
-                    <div class="mb-4">
-                        <label for="venue" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <div class="mb-6">
+                        <label for="venue" class="block text-sm font-semibold text-gray-800 mb-2">
                             Venue *
                         </label>
                         <input 
@@ -102,7 +108,7 @@
                             name="venue" 
                             value="{{ old('venue') }}"
                             required
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             placeholder="Enter venue location"
                         >
                         @error('venue')
@@ -110,63 +116,106 @@
                         @enderror
                     </div>
 
-                    <!-- Categories -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Categories
-                        </label>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            @foreach($categories as $category)
-                                <label class="flex items-center">
-                                    <input 
-                                        type="checkbox" 
-                                        name="categories[]" 
-                                        value="{{ $category->id }}"
-                                        {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}
-                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                    >
-                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $category->name }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                        @error('categories.*')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Status and Max Participants -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Category and Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Status *
+                            <label for="category" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Category
+                            </label>
+                            <select 
+                                id="category" 
+                                name="categories[]"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            >
+                                <option value="">Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="status" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Status
                             </label>
                             <select 
                                 id="status" 
                                 name="status"
                                 required
-                                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             >
+                                <option value="upcoming" {{ old('status', 'upcoming') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
                                 <option value="open" {{ old('status') == 'open' ? 'selected' : '' }}>Open</option>
-                                <option value="upcoming" {{ old('status') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
                                 <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Closed</option>
                             </select>
-                            @error('status')
+                        </div>
+                    </div>
+
+                    <!-- Organizer Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label for="organizer_name" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Organizer
+                            </label>
+                            <input 
+                                type="text" 
+                                id="organizer_name" 
+                                name="organizer_name" 
+                                value="{{ old('organizer_name') }}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                placeholder="Enter organizer name"
+                            >
+                            @error('organizer_name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-
                         <div>
-                            <label for="max_participants" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Max Participants (Leave empty for unlimited)
+                            <label for="organizer_contact" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Organizer Contact
+                            </label>
+                            <input 
+                                type="text" 
+                                id="organizer_contact" 
+                                name="organizer_contact" 
+                                value="{{ old('organizer_contact') }}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                placeholder="Enter contact number"
+                            >
+                            @error('organizer_contact')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label for="organizer_email" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Organizer Email
+                            </label>
+                            <input 
+                                type="email" 
+                                id="organizer_email" 
+                                name="organizer_email" 
+                                value="{{ old('organizer_email') }}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                placeholder="Enter email address"
+                            >
+                            @error('organizer_email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="max_participants" class="block text-sm font-semibold text-gray-800 mb-2">
+                                Max Participants
                             </label>
                             <input 
                                 type="number" 
                                 id="max_participants" 
                                 name="max_participants" 
-                                value="{{ old('max_participants') }}"
+                                value="{{ old('max_participants', 100) }}"
                                 min="1"
-                                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                placeholder="Optional"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                             >
                             @error('max_participants')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -174,100 +223,50 @@
                         </div>
                     </div>
 
-                    <!-- Poster Image -->
-                    <div class="mb-4">
-                        <label for="poster_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Event Poster (JPG/PNG, max 2MB)
+                    <!-- Event Image URL -->
+                    <div class="mb-6">
+                        <label for="poster_image_url" class="block text-sm font-semibold text-gray-800 mb-2">
+                            Event Image URL
                         </label>
+                        <input 
+                            type="url" 
+                            id="poster_image_url" 
+                            name="poster_image_url" 
+                            value="{{ old('poster_image_url', 'https://images.unsplash.com/photo-1646579886135-068c738003087c') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                            placeholder="https://images.unsplash.com/photo-..."
+                        >
+                        <p class="mt-1 text-xs text-gray-500">Or upload a file below</p>
                         <input 
                             type="file" 
                             id="poster_image" 
                             name="poster_image" 
                             accept="image/jpeg,image/jpg,image/png"
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        >
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Or provide an image URL below</p>
-                        <input 
-                            type="url" 
-                            name="poster_image_url" 
-                            value="{{ old('poster_image_url') }}"
-                            placeholder="https://example.com/image.jpg"
-                            class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                         >
                         @error('poster_image')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Organizer Information -->
-                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Organizer Information</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="organizer_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Organizer Name
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="organizer_name" 
-                                    name="organizer_name" 
-                                    value="{{ old('organizer_name') }}"
-                                    class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                    placeholder="Club/Organization name"
-                                >
-                                @error('organizer_name')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="organizer_contact" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Contact Number
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="organizer_contact" 
-                                    name="organizer_contact" 
-                                    value="{{ old('organizer_contact') }}"
-                                    class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                    placeholder="Phone number"
-                                >
-                                @error('organizer_contact')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="organizer_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Email Address
-                            </label>
-                            <input 
-                                type="email" 
-                                id="organizer_email" 
-                                name="organizer_email" 
-                                value="{{ old('organizer_email') }}"
-                                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                placeholder="email@example.com"
-                            >
-                            @error('organizer_email')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
                     <!-- Form Actions -->
-                    <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <a href="{{ route('manager.events.index') }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors">
-                            Cancel
-                        </a>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium transition-colors">
+                    <div class="flex items-center justify-between gap-4 pt-6 border-t border-gray-200">
+                        <button type="submit" class="inline-flex items-center px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-md transition-colors">
+                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
                             Create Event
                         </button>
+                        <a href="{{ route('manager.dashboard') }}" class="inline-flex items-center px-6 py-3 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-medium rounded-md transition-colors">
+                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Cancel
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

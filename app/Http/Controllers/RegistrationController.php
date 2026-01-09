@@ -19,11 +19,22 @@ class RegistrationController extends Controller
     public function myEvents(): View
     {
         $user = auth()->user();
+        \Log::info('User ID: ' . $user->id);
 
+        // Get registered events with debugging
         $registrations = $user->registeredEvents()
             ->with(['manager', 'categories'])
             ->orderByPivot('created_at', 'desc')
             ->paginate(12);
+
+        \Log::info('Number of registered events found: ' . $registrations->count());
+        
+        if ($registrations->count() === 0) {
+            $allEvents = \App\Models\Event::count();
+            $allRegistrations = \DB::table('event_registrations')->where('user_id', $user->id)->get();
+            \Log::info('Total events in system: ' . $allEvents);
+            \Log::info('Raw registrations for user:', ['registrations' => $allRegistrations]);
+        }
 
         return view('registrations.my-events', compact('registrations'));
     }
@@ -65,14 +76,14 @@ class RegistrationController extends Controller
         try {
             DB::beginTransaction();
 
-            // Attach user to event with registration details
+            // Attach user to event with registration details - set status to 'confirmed' by default
             $user->registeredEvents()->attach($event->id, [
-                'status' => 'pending',
+                'status' => 'confirmed',
             ]);
 
             // Update event status if it becomes full
             if ($event->max_participants !== null) {
-                $confirmedCount = $event->confirmed_participants_count;
+                $confirmedCount = $event->participants()->wherePivot('status', 'confirmed')->count() + 1;
                 if ($confirmedCount >= $event->max_participants) {
                     $event->update(['status' => Event::STATUS_FULL]);
                 }

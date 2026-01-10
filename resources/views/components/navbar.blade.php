@@ -42,7 +42,7 @@
                         </a>
                         @auth
                             <a href="{{ route('registrations.my-events') }}" class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('registrations.*') ? 'bg-teal-500 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-600' }}">
-                                Ticket
+                                My Events
                             </a>
                             @if(auth()->user()->isEventManager())
                                 <a href="{{ route('manager.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('manager.*') ? 'bg-teal-500 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-600' }}">
@@ -51,7 +51,7 @@
                             @endif
                         @else
                             <a href="{{ route('registrations.my-events') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition-colors">
-                                Ticket
+                                My Events
                             </a>
                         @endauth
                     </div>
@@ -104,7 +104,7 @@
             </a>
             @auth
                 <a href="{{ route('registrations.my-events') }}" class="block rounded-md px-3 py-2 text-base font-medium transition-colors {{ request()->routeIs('registrations.*') ? 'bg-teal-500 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-600' }}">
-                    Ticket
+                    My Events
                 </a>
                 @if(auth()->user()->isEventManager())
                     <a href="{{ route('manager.dashboard') }}" class="block rounded-md px-3 py-2 text-base font-medium transition-colors {{ request()->routeIs('manager.*') ? 'bg-teal-500 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-600' }}">

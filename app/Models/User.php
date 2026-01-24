@@ -74,6 +74,7 @@ class User extends Authenticatable
      */
     public const ROLE_PUBLIC = 'public';
     public const ROLE_EVENT_MANAGER = 'event_manager';
+    public const ROLE_ADMIN = 'admin';
 
     /**
      * Get all events created by this user (as event manager)
@@ -105,6 +106,16 @@ class User extends Authenticatable
     public function isEventManager(): bool
     {
         return $this->role === self::ROLE_EVENT_MANAGER;
+    }
+
+    /**
+     * Check if user is an admin
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
     }
 
     /**

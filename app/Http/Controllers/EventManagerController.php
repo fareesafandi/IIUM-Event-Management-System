@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -167,8 +168,13 @@ class EventManagerController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $event->load('categories');
-        $categories = Category::orderBy('name')->get();
+        try {
+            $event->load('categories');
+            $categories = Category::select('id', 'name')->orderBy('name')->get();
+        } catch (\Exception $e) {
+            Log::error('Error loading event or categories: ' . $e->getMessage());
+            $categories = collect([]);
+        }
 
         return view('manager.events.edit', compact('event', 'categories'));
     }
@@ -231,8 +237,8 @@ class EventManagerController extends Controller
 
             DB::commit();
 
-            return redirect()->route('manager.events.index')
-                ->with('success', 'Event updated successfully!');
+            return redirect()->route('manager.events.edit', $event)
+                ->with('success', 'Changes saved successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 

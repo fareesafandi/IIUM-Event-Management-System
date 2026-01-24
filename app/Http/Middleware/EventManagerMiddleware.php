@@ -22,9 +22,10 @@ class EventManagerMiddleware
             return redirect()->route('login')->with('error', 'Please login to access this page.');
         }
 
-        if (!auth()->user()->isEventManager()) {
+        // Allow access to users who are event managers or admins
+        if (! (auth()->user()->isEventManager() || (method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())) ) {
             return redirect()->route('home')
-                ->with('error', 'You do not have permission to access this page. Only event managers are allowed.');
+                ->with('error', 'You do not have permission to access this page. Only event managers or admins are allowed.');
         }
 
         return $next($request);

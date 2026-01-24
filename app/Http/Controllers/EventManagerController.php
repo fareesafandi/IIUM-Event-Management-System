@@ -198,25 +198,26 @@ class EventManagerController extends Controller
             $newImagePath = null;
 
             if ($request->hasFile('poster_image')) {
+                // New file uploaded - use it
                 $image = $request->file('poster_image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $newImagePath = $image->storeAs('events/posters', $imageName, 'public');
                 $validated['poster_image'] = $newImagePath;
 
                 // Delete old image if it exists and is in storage (not URL)
-                if ($oldImagePath && Storage::disk('public')->exists($oldImagePath)) {
+                if ($oldImagePath && !filter_var($oldImagePath, FILTER_VALIDATE_URL) && Storage::disk('public')->exists($oldImagePath)) {
                     Storage::disk('public')->delete($oldImagePath);
                 }
-            } elseif ($request->has('poster_image_url')) {
-                // Allow URL for poster image
+            } elseif ($request->filled('poster_image_url')) {
+                // New URL provided (not empty) - use it
                 $validated['poster_image'] = $request->poster_image_url;
 
                 // Delete old image if it exists and is in storage (not URL)
-                if ($oldImagePath && Storage::disk('public')->exists($oldImagePath)) {
+                if ($oldImagePath && !filter_var($oldImagePath, FILTER_VALIDATE_URL) && Storage::disk('public')->exists($oldImagePath)) {
                     Storage::disk('public')->delete($oldImagePath);
                 }
             } else {
-                // Keep existing image if not changed
+                // No new image provided - keep existing image
                 unset($validated['poster_image']);
             }
 

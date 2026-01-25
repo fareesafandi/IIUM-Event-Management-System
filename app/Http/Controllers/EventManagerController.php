@@ -293,19 +293,27 @@ class EventManagerController extends Controller
     /**
      * Display the list of participants for the specified event.
      *
+     * @param Request $request
      * @param Event $event
      * @return View
      */
-    public function participants(Event $event): View
+    public function participants(Request $request, Event $event): View
     {
         // Ensure user owns this event
         if ($event->manager_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        $participants = $event->participants()
-            ->orderByPivot('created_at', 'desc')
-            ->paginate(20);
+        $query = $event->participants();
+
+        // Filter by status if provided
+        if ($request->has('status') && in_array($request->status, ['pending', 'confirmed', 'cancelled'])) {
+            $query->wherePivot('status', $request->status);
+        }
+
+        $participants = $query->orderByPivot('created_at', 'desc')
+            ->paginate(20)
+            ->withQueryString();
 
         $stats = [
             'total' => $event->participants()->count(),

@@ -31,6 +31,18 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
+// Suppress PHP 8.4 deprecation warnings from vendor packages (temporary until vendors update)
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    // Suppress all E_DEPRECATED warnings from vendor directory
+    if ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED) {
+        if (strpos($errfile, 'vendor') !== false || 
+            strpos($errfile, DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR) !== false) {
+            return true; // Suppress this warning
+        }
+    }
+    return false; // Let other errors through
+}, E_DEPRECATED | E_USER_DEPRECATED);
+
 require __DIR__.'/../vendor/autoload.php';
 
 /*

@@ -34,12 +34,16 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'register_as_manager' => ['nullable', 'boolean'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // Mutator will automatically hash this
+            'role' => $request->has('register_as_manager') && $request->register_as_manager 
+                ? User::ROLE_EVENT_MANAGER 
+                : User::ROLE_PUBLIC,
         ]);
 
         event(new Registered($user));
